@@ -1,0 +1,20 @@
+# tests/test_app.py — Flask 应用初始测试
+import pytest
+from app import app
+
+@pytest.fixture
+def client():
+    """创建测试客户端"""
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        yield client
+
+def test_home_page_returns_200(client):
+    """首页应返回 200 状态码"""
+    response = client.get('/')
+    assert response.status_code == 200
+
+def test_home_page_contains_title(client):
+    """首页应包含 OpenClaw 品牌名"""
+    response = client.get('/')
+    assert 'OpenClaw' in response.data.decode('utf-8')
