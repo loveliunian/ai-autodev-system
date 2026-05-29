@@ -1,12 +1,54 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw Skill Store</title>
-</head>
-<body>
-    <h1>OpenClaw Skill Store</h1>
-    <p>欢迎来到 OpenClaw 技能商店。</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}OpenClaw Skill Store — 发现与分享技能{% endblock %}
+
+{% block content %}
+<!-- Hero 区 -->
+<section class="hero">
+    <h1 class="hero-title">发现强大的 OpenClaw 技能</h1>
+    <p class="hero-subtitle">
+        浏览社区贡献的技能，一键安装到你的 OpenClaw 助手。
+        从自动化到创意工具，找到你需要的技能。
+    </p>
+    <div class="search-container">
+        <form class="search-form" action="/" method="get">
+            <input
+                type="text"
+                name="q"
+                class="search-input"
+                placeholder="搜索技能名称、描述或标签..."
+                aria-label="搜索技能"
+            >
+            <button type="submit" class="search-btn">搜索</button>
+        </form>
+    </div>
+</section>
+
+<!-- 技能卡片网格 -->
+<section class="skills-grid">
+    {% if skills %}
+        {% for skill in skills %}
+        <article class="skill-card">
+            <div class="skill-card-header">
+                <div class="skill-card-icon">{{ skill.icon|default('🧩') }}</div>
+                <h3 class="skill-card-title">{{ skill.name }}</h3>
+            </div>
+            <p class="skill-card-description">{{ skill.description|default('暂无描述') }}</p>
+            <div class="skill-card-meta">
+                <span>⭐ {{ skill.stars|default(0) }}</span>
+                <span>📥 {{ skill.downloads|default(0) }}</span>
+                {% if skill.version %}
+                <span class="skill-card-tag">v{{ skill.version }}</span>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📦</div>
+        <p class="empty-state-text">还没有技能被提交</p>
+        <p class="empty-state-hint">成为第一个提交技能的人！</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

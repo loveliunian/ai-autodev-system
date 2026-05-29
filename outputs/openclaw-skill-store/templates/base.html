@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OpenClaw Skill Store — 发现和分享 OpenClaw 技能">
+    <title>{% block title %}OpenClaw Skill Store{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="/" class="navbar-brand">
+                <span class="brand-icon">🦞</span>
+                <span>OpenClaw Skill Store</span>
+            </a>
+            <ul class="navbar-links">
+                <li><a href="/">浏览技能</a></li>
+                <li><a href="/submit" class="btn-submit">提交技能</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容区 -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>&copy; 2026 OpenClaw Skill Store. Built with ❤️ for the OpenClaw community.</p>
+            <p><a href="https://github.com/nousresearch/openclaw" target="_blank" rel="noopener">OpenClaw on GitHub</a></p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
