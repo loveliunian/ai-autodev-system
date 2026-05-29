@@ -1,7 +1,7 @@
 ---
 name: autodev-pipeline
 description: "AI 自主开发流水线：需求→计划→并行开发→审查→部署，全程对话驱动"
-version: 1.1.0
+version: 1.2.0
 author: Hermes Agent
 license: MIT
 platforms: [linux, macos]
@@ -157,6 +157,8 @@ cd <项目目录> && <pytest命令>
 
 验证通过后才标记 task 完成。如果发现子 Agent 声称但未执行的操作（如 git commit 缺失），主 Agent 直接补上。
 
+> 📖 详见 `references/subagent-verification-pattern.md`
+
 ---
 
 ### 阶段 3：集成测试与审查
@@ -196,8 +198,14 @@ services:
     restart: always
     ports:
       - "<端口>:<端口>"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE=/app/data/skills.db
     volumes:
-      - ./data:/app/data  # 持久化数据
+      - app-data:/app/data
+
+volumes:
+  app-data:
 ```
 
 ```ignore
@@ -256,6 +264,8 @@ sshpass -p '<密码>' scp -o StrictHostKeyChecking=no -r \
 sshpass -p '<密码>' ssh -o StrictHostKeyChecking=no <用户>@<IP> \
   "cd /opt/<项目名> && docker compose up -d --build"
 ```
+
+> 📖 部署常见问题见 `references/cloud-deployment-pitfalls.md`（超时、镜像加速、安全组等）
 
 #### 5.5 配置防火墙
 ```bash
