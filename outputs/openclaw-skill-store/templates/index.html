@@ -16,38 +16,82 @@
                 type="text"
                 name="q"
                 class="search-input"
-                placeholder="搜索技能名称、描述或标签..."
+                placeholder="搜索技能名称或描述..."
                 aria-label="搜索技能"
+                value="{{ query }}"
             >
+            {% if category %}
+            <input type="hidden" name="category" value="{{ category }}">
+            {% endif %}
             <button type="submit" class="search-btn">搜索</button>
         </form>
     </div>
 </section>
 
+<!-- 统计栏 -->
+<section class="stats-bar">
+    <div class="stats-item">
+        <span class="stats-number">{{ stats.total }}</span>
+        <span class="stats-label">技能总数</span>
+    </div>
+    <div class="stats-item">
+        <span class="stats-number">{{ stats.categories }}</span>
+        <span class="stats-label">分类数</span>
+    </div>
+    {% if query or category %}
+    <div class="stats-item">
+        <a href="{{ url_for('index') }}" class="clear-filter">清除筛选</a>
+    </div>
+    {% endif %}
+</section>
+
+<!-- 分类筛选 -->
+{% if categories %}
+<section class="category-filters">
+    <a href="{{ url_for('index', q=query) }}" class="category-chip {% if not category %}active{% endif %}">全部</a>
+    {% for cat in categories %}
+    <a href="{{ url_for('index', q=query, category=cat) }}" class="category-chip {% if category == cat %}active{% endif %}">{{ cat }}</a>
+    {% endfor %}
+</section>
+{% endif %}
+
 <!-- 技能卡片网格 -->
 <section class="skills-grid">
     {% if skills %}
         {% for skill in skills %}
-        <article class="skill-card">
-            <div class="skill-card-header">
-                <div class="skill-card-icon">{{ skill.icon|default('🧩') }}</div>
-                <h3 class="skill-card-title">{{ skill.name }}</h3>
-            </div>
-            <p class="skill-card-description">{{ skill.description|default('暂无描述') }}</p>
-            <div class="skill-card-meta">
-                <span>⭐ {{ skill.stars|default(0) }}</span>
-                <span>📥 {{ skill.downloads|default(0) }}</span>
-                {% if skill.version %}
-                <span class="skill-card-tag">v{{ skill.version }}</span>
-                {% endif %}
-            </div>
-        </article>
+        <a href="{{ url_for('skill_detail', skill_id=skill.id) }}" class="skill-card-link">
+            <article class="skill-card">
+                <div class="skill-card-header">
+                    <div class="skill-card-icon">{{ skill.emoji }}</div>
+                    <h3 class="skill-card-title">{{ skill.name }}</h3>
+                </div>
+                <p class="skill-card-description">{{ skill.description }}</p>
+                <div class="skill-card-meta">
+                    <span>📥 {{ skill.downloads }}</span>
+                    {% if skill.category %}
+                    <span class="skill-card-tag">{{ skill.category }}</span>
+                    {% endif %}
+                </div>
+            </article>
+        </a>
         {% endfor %}
     {% else %}
     <div class="empty-state">
-        <div class="empty-state-icon">📦</div>
-        <p class="empty-state-text">还没有技能被提交</p>
-        <p class="empty-state-hint">成为第一个提交技能的人！</p>
+        <div class="empty-state-icon">🔍</div>
+        <p class="empty-state-text">
+            {% if query or category %}
+            没有找到匹配的技能
+            {% else %}
+            还没有技能被提交
+            {% endif %}
+        </p>
+        <p class="empty-state-hint">
+            {% if query or category %}
+            试试其他关键词或清除筛选条件
+            {% else %}
+            成为第一个提交技能的人！
+            {% endif %}
+        </p>
     </div>
     {% endif %}
 </section>
